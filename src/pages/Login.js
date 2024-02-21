@@ -5,8 +5,23 @@ import yu_logo from '../asset/yu_logo.svg';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
+import { createTheme, ThemeProvider, alpha, getContrastRatio } from '@mui/material/styles';
 
 function Login() {
+    const blueBase = '#003C84';
+    const blueMain = alpha(blueBase, 0.8);
+
+    const theme = createTheme({
+        palette: {
+            blue: {
+                main: blueMain,
+                light: alpha(blueBase, 0.5),
+                dark: alpha(blueBase, 0.9),
+                contrastText: getContrastRatio(blueMain, '#fff') > 4.5 ? '#fff' : '#111',
+            },
+        },
+    });
+
     return (
         <div className="login">
             <div className="login-header">
@@ -24,9 +39,13 @@ function Login() {
                         size="small"
                         type="password"
                     />
-                    <Button variant="contained">Login</Button>
+                    <ThemeProvider theme={theme}>
+                        <Button variant="contained" color="blue">
+                            Login
+                        </Button>
+                    </ThemeProvider>
                 </div>
-                <Link href="/" underline="hover">
+                <Link href="/" underline="always" color={'#213775'}>
                     회원가입 하러 가기
                 </Link>
             </div>
