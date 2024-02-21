@@ -2,6 +2,8 @@
     background-color: #ecf5ff;
     text-align: center;
     font-family: Pretendard, sans-serif;
+    width: 100vw;
+    height: 100vh;
 }
 
 .App-logo {
