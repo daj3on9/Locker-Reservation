@@ -45,6 +45,7 @@ export function Map() {
                     { color: '#7ea0db', text: '대여 가능' },
                     { color: '#E26C6C', text: '선택' },
                 ]}
+                style={{ margin: '30px 0px 0px 100px' }}
             />
         </div>
     );

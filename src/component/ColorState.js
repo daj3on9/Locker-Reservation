@@ -7,6 +7,10 @@ const ColorStateBox = styled.div`
     flex-direction: row;
     align-items: center;
     gap: 30px;
+    background-color: #ffffff;
+    width: fit-content;
+    padding: 0px 30px;
+    border-radius: 10px;
 `;
 
 const ColorStateItem = styled.div`
