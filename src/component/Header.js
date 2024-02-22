@@ -1,20 +1,20 @@
-import React from "react";
-import styled from "styled-components";
-import yu_logo from "../asset/yu_logo.svg";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import React from 'react';
+import styled from 'styled-components';
+import yu_logo from '../asset/yu_logo.svg';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import { Link } from 'react-router-dom';
 
 function Header() {
     return (
         <HeaderContainer>
             <LogoImg src={yu_logo} alt="로고" />
             <Heading>컴퓨터공학부 사물함 예약 시스템</Heading>
-            <IconContainer>
-                <AccountCircleOutlinedIcon
-                    fontSize="large"
-                    sx={{ fontSize: 30 }}
-                />
-                <LoginText>로그인</LoginText>
-            </IconContainer>
+            <Link to="/login" style={{ textDecoration: 'none' }}>
+                <IconContainer>
+                    <AccountCircleOutlinedIcon fontSize="large" sx={{ fontSize: 30 }} />
+                    <LoginText>로그인</LoginText>
+                </IconContainer>
+            </Link>
         </HeaderContainer>
     );
 }
