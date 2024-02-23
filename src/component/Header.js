@@ -1,33 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
 import yu_logo from '../asset/yu_logo.svg';
+import small_yu_logo from '../asset/small_yu_logo.png';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { Link } from 'react-router-dom';
+import { useMediaQuery } from 'react-responsive';
 
-function Header() {
-    return (
-        <HeaderContainer>
-            <LogoImg src={yu_logo} alt="로고" />
-            <Heading>컴퓨터공학부 사물함 예약 시스템</Heading>
-            <Link to="/login" style={{ textDecoration: 'none' }}>
-                <IconContainer>
-                    <AccountCircleOutlinedIcon fontSize="large" sx={{ fontSize: 30 }} />
-                    <LoginText>로그인</LoginText>
-                </IconContainer>
-            </Link>
-        </HeaderContainer>
-    );
-}
-
-export default Header;
-
-// styled- component
 const HeaderContainer = styled.div`
     background-color: rgb(255, 255, 255);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0px 50px;
+    padding: ${(props) => (props.$isMobile ? '0px 20px' : '0px 50px')};
 `;
 
 const LogoImg = styled.img`
@@ -35,9 +19,9 @@ const LogoImg = styled.img`
 `;
 
 const Heading = styled.p`
-    font-size: 24px;
+    font-size: ${(props) => (props.$isMobile ? '15px' : '20px')};
     font-weight: bold;
-    margin-left: -10%;
+
     color: rgb(25, 57, 115);
 `;
 
@@ -47,5 +31,27 @@ const IconContainer = styled.div`
 
 const LoginText = styled.p`
     margin: 0px;
-    font-size: 15px;
+    font-size: ${(props) => (props.$isMobile ? '10px' : '15px')};
 `;
+
+const Header = () => {
+    const isMobile = useMediaQuery({ query: '(max-width:1020px)' });
+
+    const logoSrc = isMobile ? small_yu_logo : yu_logo;
+    const fontSize = isMobile ? 'small' : 'medium';
+
+    return (
+        <HeaderContainer $isMobile={isMobile}>
+            <LogoImg src={logoSrc} alt="로고" />
+            <Heading $isMobile={isMobile}>컴퓨터공학부 사물함 예약 시스템</Heading>
+            <Link to="/login" style={{ textDecoration: 'none' }}>
+                <IconContainer>
+                    <AccountCircleOutlinedIcon fontSize={fontSize} />
+                    <LoginText $isMobile={isMobile}>로그인</LoginText>
+                </IconContainer>
+            </Link>
+        </HeaderContainer>
+    );
+};
+
+export default Header;

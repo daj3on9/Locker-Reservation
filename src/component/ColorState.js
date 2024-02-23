@@ -8,9 +8,16 @@ const ColorStateBox = styled.div`
     align-items: center;
     gap: 30px;
     background-color: #ffffff;
-    width: fit-content;
     padding: 0px 30px;
     border-radius: 10px;
+    margin-top: 30px;
+    justify-content: space-around;
+
+    @media screen and (max-width: 561px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0px;
+    }
 `;
 
 const ColorStateItem = styled.div`
