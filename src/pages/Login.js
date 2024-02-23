@@ -12,8 +12,10 @@ function Login() {
     return (
         <div className="center-view ">
             <div className="view-header">
-                <img src={yu_logo} alt="영남대 로고" />
-                <h2 style={{ color: '#193973' }}> 컴퓨터공학부 사물함 예약 시스템 </h2>
+                <a href="/" style={{ textDecoration: 'none' }}>
+                    <img src={yu_logo} alt="영남대 로고" />
+                    <h2 style={{ color: '#193973' }}> 컴퓨터공학부 사물함 예약 시스템 </h2>
+                </a>
             </div>
             <div className="user-container">
                 <div className="user-form">
