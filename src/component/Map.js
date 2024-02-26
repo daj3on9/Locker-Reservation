@@ -33,7 +33,7 @@ const Image = styled.img`
 
 const FormContainer = styled.div`
     background-color: #ffffff;
-    width: 33.5%
+    width: 33.5%;
     margin-top: 50px;
 
     @media screen and (max-width: 1280px) {
@@ -50,44 +50,47 @@ const StateContainer = styled.div`
 `;
 
 const Map = () => {
-    const [floor, setFloor] = useState('');
+    const [floor, setFloor] = useState(1);
 
     const handleChange = (event) => {
         setFloor(event.target.value);
     };
 
     return (
-        <MapContainer>
-            <ImageContainer>
-                {floor === 1 && <Image src={FirstFloor} alt="1층" />}
-                {floor === 2 && <Image src={SecondFloor} alt="2층" />}
-            </ImageContainer>
-            <FormContainer>
-                <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">Floor</InputLabel>
-                    <Select
-                        labelId="demo-select-small-label"
-                        id="demo-select-small"
-                        value={floor}
-                        label="Age"
-                        onChange={handleChange}
-                        fullWidth
-                    >
-                        <MenuItem value={1}> 1층 </MenuItem>
-                        <MenuItem value={2}> 2층 </MenuItem>
-                    </Select>
-                </FormControl>
-            </FormContainer>
-            <StateContainer>
-                <ColorState
-                    states={[
-                        { color: '#D9D9D9', text: '대여 불가능' },
-                        { color: '#7ea0db', text: '대여 가능' },
-                        { color: '#E26C6C', text: '선택' },
-                    ]}
-                />
-            </StateContainer>
-        </MapContainer>
+        <>
+            <p> 김형준 님 </p>
+            <MapContainer>
+                <ImageContainer>
+                    {floor === 1 && <Image src={FirstFloor} alt="1층" />}
+                    {floor === 2 && <Image src={SecondFloor} alt="2층" />}
+                </ImageContainer>
+                <FormContainer>
+                    <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">Floor</InputLabel>
+                        <Select
+                            labelId="demo-select-small-label"
+                            id="demo-select-small"
+                            value={floor}
+                            label="Age"
+                            onChange={handleChange}
+                            fullWidth
+                        >
+                            <MenuItem value={1}> 1층 </MenuItem>
+                            <MenuItem value={2}> 2층 </MenuItem>
+                        </Select>
+                    </FormControl>
+                </FormContainer>
+                <StateContainer>
+                    <ColorState
+                        states={[
+                            { color: '#D9D9D9', text: '대여 불가능' },
+                            { color: '#7ea0db', text: '대여 가능' },
+                            { color: '#E26C6C', text: '선택' },
+                        ]}
+                    />
+                </StateContainer>
+            </MapContainer>
+        </>
     );
 };
 

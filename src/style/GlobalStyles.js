@@ -24,10 +24,10 @@ const GlobalStyles = createGlobalStyle`
     .user-container {
         margin: 30px 0px 100px;
         background-color: #ffffff;
-        padding : 50px 20px;
+        padding : 50px 100px;
         width: 20%;
 
-        @media screen and (max-width: 1240px) {
+        @media screen and (max-width: 1020px) {
             width: 60%;
             padding : 50px 30px 50px;
         }

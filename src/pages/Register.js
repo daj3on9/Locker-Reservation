@@ -1,5 +1,6 @@
 import React from 'react';
 import GlobalStyles from '../style/GlobalStyles';
+import styled from 'styled-components';
 
 import yu_logo from '../asset/yu_logo.svg';
 import TextField from '@mui/material/TextField';
@@ -7,6 +8,13 @@ import Button from '@mui/material/Button';
 
 import { ThemeProvider } from '@mui/material/styles';
 import { largeButtonTheme, smallButtonTheme } from '../style/theme';
+
+const AuthNumber = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+`;
 
 function Register() {
     return (
@@ -25,14 +33,14 @@ function Register() {
                         <TextField fullWidth label="이름" variant="standard" size="small" />
                         <TextField fullWidth label="비밀번호" variant="standard" size="small" type="password" />
                         <TextField fullWidth label="학과" variant="standard" size="small" />
-                        <div>
+                        <AuthNumber>
                             <TextField fullWidth label="전화번호" variant="standard" size="small" />
                             <ThemeProvider theme={smallButtonTheme}>
-                                <Button variant="contained" color="primary" sx={{ fontSize: '11px' }}>
+                                <Button variant="contained" color="primary" sx={{ fontSize: '11px', padding: '8px' }}>
                                     인증번호 전송
                                 </Button>
                             </ThemeProvider>
-                        </div>
+                        </AuthNumber>
 
                         <TextField fullWidth label="인증번호" variant="standard" size="small" />
 
