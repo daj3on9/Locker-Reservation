@@ -207,7 +207,9 @@ function Register() {
                                     type="button"
                                     onClick={requestNumber}
                                 >
-                                    인증번호 전송
+                                    인증번호
+                                    <br />
+                                    전송
                                 </Button>
                             </ThemeProvider>
                         </AuthNumber>
@@ -231,7 +233,9 @@ function Register() {
                                     type="button"
                                     onClick={confirmNumber}
                                 >
-                                    인증번호 확인
+                                    인증번호
+                                    <br />
+                                    확인
                                 </Button>
                             </ThemeProvider>
                         </AuthNumber>
