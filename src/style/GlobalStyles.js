@@ -25,7 +25,7 @@ const GlobalStyles = createGlobalStyle`
         margin: 30px 0px 100px;
         background-color: #ffffff;
         padding : 50px 100px;
-        width: 20%;
+        width: 30%;
 
         @media screen and (max-width: 1020px) {
             width: 60%;
