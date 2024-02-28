@@ -1,36 +1,71 @@
 import axios from 'axios';
 
+const BASE_URL = 'http://{URL}';
+
+// 기본 axios
+const axiosAPI = (url, options) => {
+    const instance = axios.create({ baseURL: url, ...options });
+    return instance;
+};
+
+// Auth axios
+const authAxiosAPI = (url, options) => {
+    const instance = axios.create({
+        baseURL: url,
+        headers: {},
+        ...options,
+    });
+
+    instance.interceptors.request.use(
+        (config) => {
+            // const token = getItem('jwt_token');
+            const token = '';
+
+            config.headers = {
+                authorization: token ? `bearer ${token}` : null,
+            };
+            return config;
+        },
+        (error) => Promise.reject(error.response)
+    );
+
+    return instance;
+};
+
 // 회원 axios
-export const userAxios = axios.create({
-    baseURL: 'http://{URL}/api/user/',
-});
+const userAxiosAPI = (options) => {
+    const instance = axios.create({
+        baseURL: BASE_URL + '/api/user',
+        headers: {},
+        ...options,
+    });
 
-// 응답 interceptors 추가
-userAxios.interceptors.response.use(
-    (response) => {
-        // 응답이 200 또는 201인 경우에만 response 반환
-        if (response.status === 200 || response.status === 201) {
-            return response;
-        } else {
-            // 응답이 200 또는 201이 아닌 경우에는 에러
-            throw new Error(`HTTP status code is not 200 or 201. Status: ${response.status}`);
+    instance.interceptors.response.use(
+        (response) => {
+            if (response.status === 200) {
+                return console.log('Message : ', response.data.responseMessage);
+            }
+        },
+        (error) => {
+            console.error('dlsejdpdld : ', error);
+            return Promise.reject(error);
         }
-    },
-    (error) => {
-        // HTTP 응답 코드에 따라 에러 메시지 처리
-        if (error.response && error.response.status === 409) {
-            alert('이미 존재하는 학번입니다.');
-        } else if (error.response && error.response.status === 400) {
-            alert('인증 실패');
-        } else {
-            // 기타 에러인 경우
-            alert('에러 발생');
-        }
-        return Promise.reject(error);
-    }
-);
+    );
 
-// 사물함 axios
-export const lockerAxios = axios.create({
-    baseURL: 'http://{URL}/state',
-});
+    return instance;
+};
+
+export // 사물함 axios
+const lockerAxiosAPI = (options) => {
+    const instance = axios.create({
+        baseURL: BASE_URL + '/state',
+        headers: {},
+        ...options,
+    });
+    return instance;
+};
+
+export const baseInstance = axiosAPI(BASE_URL);
+export const authInstance = authAxiosAPI(BASE_URL);
+export const userInstance = userAxiosAPI();
+export const lockerInstance = lockerAxiosAPI();

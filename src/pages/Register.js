@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import { userAxios } from '../api/customAxios';
-import { useNavigate } from 'react-router-dom';
-import GlobalStyles from '../style/GlobalStyles';
-import styled from 'styled-components';
+import { postUser, postNumber, confirmNumber } from '../api/Users';
 
 import yu_logo from '../asset/yu_logo.svg';
 import TextField from '@mui/material/TextField';
@@ -11,7 +8,8 @@ import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import { Select } from '@mui/material';
-
+import GlobalStyles from '../style/GlobalStyles';
+import styled from 'styled-components';
 import { ThemeProvider } from '@mui/material/styles';
 import { largeButtonTheme, smallButtonTheme } from '../style/theme';
 
@@ -23,8 +21,6 @@ const AuthNumber = styled.div`
 `;
 
 function Register() {
-    const navigate = useNavigate();
-
     const [form, setForm] = useState({
         studentId: '',
         password: '',
@@ -35,8 +31,6 @@ function Register() {
 
     const [certificationNumber, setCertificationNumber] = useState(''); //인증번호
     const [passwordMatch, setPasswordMatch] = useState(true);
-    const [phoneNumberError, setPhoneNumberError] = useState(false);
-    const [certificationNumberError, setCertificationNumberError] = useState(false);
 
     // 회원가입 정보 설정
     const onChange = (e) => {
@@ -54,68 +48,22 @@ function Register() {
         setCertificationNumber(e.target.value);
     };
 
-    // 회원가입 전송
-    const onSubmit = (e) => {
+    // 인증번호 요청
+    const requestCertification = (e) => {
         e.preventDefault();
-
-        if (passwordMatch) {
-            userAxios
-                .post('/signup', form)
-                .then((res) => {
-                    navigate('/login');
-                })
-                .catch((err) => {});
-        }
+        const phoneNumber = { phoneNumber: form.phoneNumber };
+        postNumber(phoneNumber);
     };
 
-    //전화번호 인증 요청
-    const requestNumber = () => {
-        const phoneNumber = form.phoneNumber;
-        console.log('인증번호 요청 : ', phoneNumber);
-        if (validateInput(phoneNumber)) {
-            setPhoneNumberError(false);
-            userAxios
-                .post('certification', { phoneNumber: phoneNumber })
-                .then((res) => {})
-                .catch((err) => {});
-        } else {
-            setPhoneNumberError(true);
-        }
-    };
-
-    //전화번호 인증 확인
-    const confirmNumber = () => {
+    // 인증번호 확인
+    const confirmCertification = (e) => {
+        e.preventDefault();
         const certification = {
             phoneNumber: form.phoneNumber,
             certificationNumber: certificationNumber,
         };
-
-        if (!validateInput(certification.phoneNumber)) {
-            // 전화번호 에러 처리
-            setCertificationNumberError(false);
-            setPhoneNumberError(true);
-        } else if (!validateInput(certification.certificationNumber)) {
-            // 인증번호 에러 처리
-            setCertificationNumberError(true);
-            setPhoneNumberError(false);
-        } else {
-            console.log(certification);
-            setPhoneNumberError(false);
-            setCertificationNumberError(false);
-            userAxios
-                .post('certification-check', certification)
-                .then((res) => {})
-                .catch((err) => {});
-        }
+        confirmNumber(certification);
     };
-
-    // 유효성 검사
-    function validateInput(varriableName) {
-        if (varriableName.trim() === '') {
-            return false;
-        }
-        return true;
-    }
 
     return (
         <>
@@ -128,7 +76,13 @@ function Register() {
                     </a>
                 </div>
                 <div className="user-container">
-                    <form className="user-form" onSubmit={onSubmit}>
+                    <form
+                        className="user-form"
+                        onSubmit={(e) => {
+                            e.preventDefault(); // 기본 제출 동작 방지
+                            postUser(form); // postUser 함수 호출
+                        }}
+                    >
                         <TextField
                             fullWidth
                             required
@@ -196,8 +150,6 @@ function Register() {
                                 size="small"
                                 name="phoneNumber"
                                 onChange={onChange}
-                                error={phoneNumberError}
-                                helperText={phoneNumberError ? '전화번호를 입력해주세요.' : ''}
                             />
                             <ThemeProvider theme={smallButtonTheme}>
                                 <Button
@@ -205,7 +157,7 @@ function Register() {
                                     color="primary"
                                     sx={{ fontSize: '11px', padding: '8px' }}
                                     type="button"
-                                    onClick={requestNumber}
+                                    onClick={requestCertification}
                                 >
                                     인증번호
                                     <br />
@@ -222,8 +174,6 @@ function Register() {
                                 size="small"
                                 name="confirmNumber"
                                 onChange={onCfNumberChange}
-                                error={certificationNumberError}
-                                helperText={certificationNumberError ? '인증번호를 입력해주세요.' : ''}
                             />
                             <ThemeProvider theme={smallButtonTheme}>
                                 <Button
@@ -231,7 +181,7 @@ function Register() {
                                     color="primary"
                                     sx={{ fontSize: '11px', padding: '8px' }}
                                     type="button"
-                                    onClick={confirmNumber}
+                                    onClick={confirmCertification}
                                 >
                                     인증번호
                                     <br />
@@ -240,7 +190,7 @@ function Register() {
                             </ThemeProvider>
                         </AuthNumber>
                         <ThemeProvider theme={largeButtonTheme}>
-                            <Button variant="contained" color="primary" type="submit" disabled>
+                            <Button variant="contained" color="primary" type="submit">
                                 회원 가입
                             </Button>
                         </ThemeProvider>
