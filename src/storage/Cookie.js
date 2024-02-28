@@ -1,23 +1,22 @@
 import { Cookies } from 'react-cookie';
 
-// refresh 토큰 쿠키에 저장
-export const setRefreshToken = (refreshToken) => {
-    const today = new Date();
-    const expireDate = today.setDate(today.getDate() + 7);
+// Refresh Token 쿠키에 저장하기
+// Access Token 및 학번, 이름은 store에 저장 -> store 폴더
 
-    return Cookies.set('refresh_token', refreshToken, {
+// 토큰 쿠키에 저장
+export const setAccessToken = (cookieName, token) => {
+    return Cookies.set(cookieName, token, {
         sameSite: 'strict',
         path: '/',
-        expires: new Date(expireDate),
     });
 };
 
-// Refresh Token 값 가져오기
-export const getCookieToken = () => {
-    return Cookies.get('refresh_token');
+// Token 값 가져오기
+export const getCookieToken = (cookieName) => {
+    return Cookies.get(cookieName);
 };
 
 // Cookie 삭제 -> 로그아웃
-export const removeCookieToken = () => {
-    return Cookies.remove('refresh_token', { sameSite: 'strict', path: '/' });
+export const removeCookieToken = (cookieName) => {
+    return Cookies.remove(cookieName, { sameSite: 'strict', path: '/' });
 };
