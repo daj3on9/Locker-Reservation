@@ -30,7 +30,9 @@ function Register() {
     });
 
     const [certificationNumber, setCertificationNumber] = useState(''); //인증번호
-    const [passwordMatch, setPasswordMatch] = useState(true);
+    const [passwordMatch, setPasswordMatch] = useState(true); // 비밀번호 일치 확인
+    const [digitError, setDigitError] = useState(false); // 전화번호 미입력
+    const [cerNumError, SetCerNumError] = useState(false); // 인증번호 미입력
 
     // 회원가입 정보 설정
     const onChange = (e) => {
@@ -51,18 +53,30 @@ function Register() {
     // 인증번호 요청
     const requestCertification = (e) => {
         e.preventDefault();
-        const phoneNumber = { phoneNumber: form.phoneNumber };
-        postNumber(phoneNumber);
+        if (form.phoneNumber === '') {
+            setDigitError(true);
+        } else {
+            setDigitError(false);
+            const phoneNumber = { phoneNumber: form.phoneNumber };
+            postNumber(phoneNumber);
+        }
     };
 
     // 인증번호 확인
     const confirmCertification = (e) => {
         e.preventDefault();
-        const certification = {
-            phoneNumber: form.phoneNumber,
-            certificationNumber: certificationNumber,
-        };
-        confirmNumber(certification);
+        if (form.phoneNumber === '' || certificationNumber === '') {
+            form.phoneNumber === '' ? setDigitError(true) : setDigitError(false);
+            certificationNumber === '' ? SetCerNumError(true) : SetCerNumError(false);
+        } else {
+            setDigitError(false);
+            SetCerNumError(false);
+            const certification = {
+                phoneNumber: form.phoneNumber,
+                certificationNumber: certificationNumber,
+            };
+            confirmNumber(certification);
+        }
     };
 
     return (
@@ -149,6 +163,8 @@ function Register() {
                                 variant="standard"
                                 size="small"
                                 name="phoneNumber"
+                                error={digitError}
+                                helperText={digitError ? '전화번호를 입력해주세요' : ''}
                                 onChange={onChange}
                             />
                             <ThemeProvider theme={smallButtonTheme}>
@@ -173,6 +189,8 @@ function Register() {
                                 variant="standard"
                                 size="small"
                                 name="confirmNumber"
+                                error={cerNumError}
+                                helperText={cerNumError ? '인증번호를 입력해주세요' : ''}
                                 onChange={onCfNumberChange}
                             />
                             <ThemeProvider theme={smallButtonTheme}>
