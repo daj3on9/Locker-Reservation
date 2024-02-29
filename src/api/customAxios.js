@@ -45,9 +45,10 @@ const userAxiosAPI = (options) => {
             if (response.status === 200) {
                 return console.log('Message : ', response.data.responseMessage);
             }
+            return response;
         },
         (error) => {
-            console.error('dlsejdpdld : ', error);
+            console.error(error);
             return Promise.reject(error);
         }
     );

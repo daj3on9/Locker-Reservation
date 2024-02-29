@@ -18,7 +18,12 @@ export const postNumber = async (phoneNumber) => {
 
 // 인증번호 확인
 export const confirmNumber = async (certification) => {
-    return userInstance.post('/certification-check', certification);
+    try {
+        const response = await userInstance().post('/certification-check', certification);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
 };
 
 // 로그인
@@ -33,5 +38,7 @@ export const postLogin = async (userInfo, dispatch) => {
             window.location.href = '/';
         }
         return response.data;
-    } catch (error) {}
+    } catch (error) {
+        throw error;
+    }
 };
