@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { postUser, postNumber, confirmNumber } from '../api/Users';
 
 import yu_logo from '../asset/yu_logo.svg';
+import AuthNumTimer from '../component/AuthNumTimer';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
@@ -30,9 +31,13 @@ function Register() {
     });
 
     const [certificationNumber, setCertificationNumber] = useState(''); //인증번호
-    const [passwordMatch, setPasswordMatch] = useState(true); // 비밀번호 일치 확인
+    const [passwordMatch, setPasswordMatch] = useState('none'); // 비밀번호 일치 확인
+    const [cerNumMatch, SetCerNumMath] = useState('none'); // 인증번호 일치 확인
+
     const [digitError, setDigitError] = useState(false); // 전화번호 미입력
     const [cerNumError, SetCerNumError] = useState(false); // 인증번호 미입력
+
+    const [timerRunning, setTimerRunning] = useState(false); // 타이머 실행
 
     // 회원가입 정보 설정
     const onChange = (e) => {
@@ -40,7 +45,7 @@ function Register() {
         setForm({ ...form, [name]: value });
 
         if (name === 'confirmPassword') {
-            setPasswordMatch(value === form.password);
+            setPasswordMatch(value === form.password ? 'pass' : 'fail');
         }
     };
 
@@ -59,23 +64,55 @@ function Register() {
             setDigitError(false);
             const phoneNumber = { phoneNumber: form.phoneNumber };
             postNumber(phoneNumber);
+            setTimerRunning(true); // 타이머 실행!
         }
     };
 
     // 인증번호 확인
-    const confirmCertification = (e) => {
+    const confirmCertification = async (e) => {
         e.preventDefault();
-        if (form.phoneNumber === '' || certificationNumber === '') {
-            form.phoneNumber === '' ? setDigitError(true) : setDigitError(false);
-            certificationNumber === '' ? SetCerNumError(true) : SetCerNumError(false);
+        if (certificationNumber === '') {
+            SetCerNumError(true);
         } else {
-            setDigitError(false);
             SetCerNumError(false);
             const certification = {
                 phoneNumber: form.phoneNumber,
                 certificationNumber: certificationNumber,
             };
-            confirmNumber(certification);
+            try {
+                // const response = await confirmNumber(certification);
+                // 확인용 코드
+                if (certificationNumber === '1234') {
+                    SetCerNumMath('pass');
+                } else {
+                    SetCerNumMath('fail');
+                }
+                // if (response.httpStatusCode === 200) {
+                //     SetCerNumMath(true);
+                // } else {
+                //     SetCerNumMath(false);
+                // }
+            } catch (error) {
+                console.error('Error confirming number:', error);
+            }
+        }
+    };
+
+    // API 전송
+    const onSubmit = (e) => {
+        e.preventDefault();
+        switch (true) {
+            case passwordMatch !== 'pass':
+                alert('비밀번호를 확인해주세요');
+                break;
+            case cerNumMatch !== 'pass':
+                alert('인증번호를 확인해주세요');
+                break;
+            case passwordMatch === 'pass' && cerNumMatch === 'pass':
+                postUser(form);
+                break;
+            default:
+                break;
         }
     };
 
@@ -90,13 +127,7 @@ function Register() {
                     </a>
                 </div>
                 <div className="user-container">
-                    <form
-                        className="user-form"
-                        onSubmit={(e) => {
-                            e.preventDefault(); // 기본 제출 동작 방지
-                            postUser(form); // postUser 함수 호출
-                        }}
-                    >
+                    <form className="user-form" onSubmit={onSubmit}>
                         <TextField
                             fullWidth
                             required
@@ -134,8 +165,8 @@ function Register() {
                             type="password"
                             name="confirmPassword"
                             onChange={onChange}
-                            error={!passwordMatch}
-                            helperText={!passwordMatch && '비밀번호가 일치하지 않습니다.'}
+                            error={passwordMatch === 'fail'}
+                            helperText={passwordMatch === 'fail' ? '비밀번호가 일치하지 않습니다.' : ''}
                         />
                         <FormControl fullWidth>
                             <InputLabel id="demo-simple-select-label">전공</InputLabel>
@@ -156,17 +187,22 @@ function Register() {
                             </Select>
                         </FormControl>
                         <AuthNumber>
-                            <TextField
-                                fullWidth
-                                required
-                                label="전화번호"
-                                variant="standard"
-                                size="small"
-                                name="phoneNumber"
-                                error={digitError}
-                                helperText={digitError ? '전화번호를 입력해주세요' : ''}
-                                onChange={onChange}
-                            />
+                            <div style={{ flexGrow: 1 }}>
+                                <TextField
+                                    fullWidth
+                                    required
+                                    label="전화번호"
+                                    variant="standard"
+                                    size="small"
+                                    name="phoneNumber"
+                                    error={digitError}
+                                    helperText={digitError ? '전화번호를 입력해주세요' : ''}
+                                    onChange={onChange}
+                                />
+                                {timerRunning && (
+                                    <AuthNumTimer timerRunning={timerRunning} setTimerRunning={setTimerRunning} />
+                                )}
+                            </div>
                             <ThemeProvider theme={smallButtonTheme}>
                                 <Button
                                     variant="contained"
@@ -174,6 +210,7 @@ function Register() {
                                     sx={{ fontSize: '11px', padding: '8px' }}
                                     type="button"
                                     onClick={requestCertification}
+                                    disabled={timerRunning}
                                 >
                                     인증번호
                                     <br />
@@ -181,6 +218,7 @@ function Register() {
                                 </Button>
                             </ThemeProvider>
                         </AuthNumber>
+
                         <AuthNumber>
                             <TextField
                                 fullWidth
@@ -189,8 +227,18 @@ function Register() {
                                 variant="standard"
                                 size="small"
                                 name="confirmNumber"
-                                error={cerNumError}
-                                helperText={cerNumError ? '인증번호를 입력해주세요' : ''}
+                                color={cerNumMatch === 'pass' ? 'success' : 'primary'}
+                                focused={cerNumMatch === 'pass'}
+                                error={cerNumError || cerNumMatch === 'fail'}
+                                helperText={
+                                    cerNumError
+                                        ? '인증번호를 입력해주세요'
+                                        : cerNumMatch === 'fail'
+                                        ? '인증번호가 일치하지 않습니다. 재입력하세요.'
+                                        : cerNumMatch === 'pass'
+                                        ? '인증번호가 확인되었습니다.'
+                                        : ''
+                                }
                                 onChange={onCfNumberChange}
                             />
                             <ThemeProvider theme={smallButtonTheme}>
