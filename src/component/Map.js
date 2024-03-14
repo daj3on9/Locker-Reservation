@@ -1,12 +1,72 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import FirstFloor from '../asset/map_1F.png';
-import SecondFloor from '../asset/map_2F.png';
-import { ColorState } from './ColorState';
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+
+import styled from "styled-components";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import FirstFloor from "../asset/map_1F.png";
+import SecondFloor from "../asset/map_2F.png";
+import { ColorState } from "./ColorState";
+
+const Map = () => {
+    const [floor, setFloor] = useState(1);
+
+    const handleChange = (event) => {
+        setFloor(event.target.value);
+    };
+
+    // useSelector로 store에 저장된 값 불러오기
+    const { authenticated, accessToken } = useSelector(
+        (state) => state.authToken
+    );
+    // 값 확인
+    console.log("로그인 여부 : ", authenticated);
+    console.log("access Token : ", accessToken);
+
+    return (
+        <>
+            {authenticated ? (
+                <div>로그인 상태입니다.</div>
+            ) : (
+                <div>로그인이 필요합니다.</div>
+            )}
+            <MapContainer>
+                <ImageContainer>
+                    {floor === 1 && <Image src={FirstFloor} alt="1층" />}
+                    {floor === 2 && <Image src={SecondFloor} alt="2층" />}
+                </ImageContainer>
+                <FormContainer>
+                    <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                            Floor
+                        </InputLabel>
+                        <Select
+                            labelId="demo-select-small-label"
+                            id="demo-select-small"
+                            value={floor}
+                            label="Age"
+                            onChange={handleChange}
+                            fullWidth>
+                            <MenuItem value={1}> 1층 </MenuItem>
+                            <MenuItem value={2}> 2층 </MenuItem>
+                        </Select>
+                    </FormControl>
+                </FormContainer>
+                <StateContainer>
+                    <ColorState
+                        states={[
+                            { color: "#D9D9D9", text: "대여 불가능" },
+                            { color: "#7ea0db", text: "대여 가능" },
+                            { color: "#E26C6C", text: "선택" },
+                        ]}
+                    />
+                </StateContainer>
+            </MapContainer>
+        </>
+    );
+};
 
 const MapContainer = styled.div`
     margin: 100px 0px 0px 100px;
@@ -48,50 +108,5 @@ const StateContainer = styled.div`
         width: 80%;
     }
 `;
-
-const Map = () => {
-    const [floor, setFloor] = useState(1);
-
-    const handleChange = (event) => {
-        setFloor(event.target.value);
-    };
-
-    return (
-        <>
-            <p> 김형준 님 </p>
-            <MapContainer>
-                <ImageContainer>
-                    {floor === 1 && <Image src={FirstFloor} alt="1층" />}
-                    {floor === 2 && <Image src={SecondFloor} alt="2층" />}
-                </ImageContainer>
-                <FormContainer>
-                    <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">Floor</InputLabel>
-                        <Select
-                            labelId="demo-select-small-label"
-                            id="demo-select-small"
-                            value={floor}
-                            label="Age"
-                            onChange={handleChange}
-                            fullWidth
-                        >
-                            <MenuItem value={1}> 1층 </MenuItem>
-                            <MenuItem value={2}> 2층 </MenuItem>
-                        </Select>
-                    </FormControl>
-                </FormContainer>
-                <StateContainer>
-                    <ColorState
-                        states={[
-                            { color: '#D9D9D9', text: '대여 불가능' },
-                            { color: '#7ea0db', text: '대여 가능' },
-                            { color: '#E26C6C', text: '선택' },
-                        ]}
-                    />
-                </StateContainer>
-            </MapContainer>
-        </>
-    );
-};
 
 export default Map;

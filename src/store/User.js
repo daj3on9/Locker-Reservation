@@ -1,21 +1,18 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 export const userSlice = createSlice({
-    name: 'authToken',
+    name: "authToken",
     initialState: {
         studentName: null,
-        studentId: null,
     },
     reducers: {
         //  accessToken 정보 저장
         SET_USER: (state, action) => {
             state.studentName = action.payload.studentName;
-            state.studentId = action.payload.studentId;
         },
         //  accessToken 삭제
         DELETE_USER: (state) => {
             state.studentName = null;
-            state.studentId = null;
         },
     },
 });

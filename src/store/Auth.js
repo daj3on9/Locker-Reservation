@@ -1,7 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 export const tokenSlice = createSlice({
-    name: 'authToken',
+    name: "authToken",
     initialState: {
         authenticated: false, //현재 로그인 여부 확인
         accessToken: null, //accessToken 저장

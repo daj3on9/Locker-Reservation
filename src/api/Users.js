@@ -46,10 +46,11 @@ export const postLogin = async (userInfo, dispatch) => {
         const response = await userInstance.post("/login", userInfo);
         if (response.status === 200) {
             // 학번, 이름, accessToken store에 저장
-            const { studentName, studentId, accessToken } = response.data;
-            dispatch(SET_USER({ studentName, studentId }));
-            dispatch(SET_TOKEN(accessToken));
-            window.location.href = "/";
+            const { studentName, accessToken } = response.data.data;
+            console.log("이름 : ", studentName);
+            console.log("토큰 : ", accessToken);
+            dispatch(SET_USER({ studentName }));
+            dispatch(SET_TOKEN({ accessToken }));
         }
         return response.data;
     } catch (error) {
