@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { postUser, postNumber, confirmNumber } from '../api/Users';
+import React, { useState } from "react";
+import { postUser, postNumber, confirmNumber } from "../api/Users";
 
-import yu_logo from '../asset/yu_logo.svg';
-import AuthNumTimer from '../component/AuthNumTimer';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import FormControl from '@mui/material/FormControl';
-import MenuItem from '@mui/material/MenuItem';
-import InputLabel from '@mui/material/InputLabel';
-import { Select } from '@mui/material';
-import GlobalStyles from '../style/GlobalStyles';
-import styled from 'styled-components';
-import { ThemeProvider } from '@mui/material/styles';
-import { largeButtonTheme, smallButtonTheme } from '../style/theme';
+import yu_logo from "../asset/yu_logo.svg";
+import AuthNumTimer from "../component/AuthNumTimer";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
+import { Select } from "@mui/material";
+import GlobalStyles from "../style/GlobalStyles";
+import styled from "styled-components";
+import { ThemeProvider } from "@mui/material/styles";
+import { largeButtonTheme, smallButtonTheme } from "../style/theme";
 
 const AuthNumber = styled.div`
     display: flex;
@@ -23,16 +23,16 @@ const AuthNumber = styled.div`
 
 function Register() {
     const [form, setForm] = useState({
-        studentId: '',
-        password: '',
-        departmentName: '',
-        phoneNumber: '',
-        studentName: '',
+        studentId: "",
+        password: "",
+        departmentName: "",
+        phoneNumber: "",
+        studentName: "",
     });
 
-    const [certificationNumber, setCertificationNumber] = useState(''); //인증번호
-    const [passwordMatch, setPasswordMatch] = useState('none'); // 비밀번호 일치 확인
-    const [cerNumMatch, SetCerNumMath] = useState('none'); // 인증번호 일치 확인
+    const [certificationNumber, setCertificationNumber] = useState(""); //인증번호
+    const [passwordMatch, setPasswordMatch] = useState("none"); // 비밀번호 일치 확인
+    const [cerNumMatch, SetCerNumMath] = useState("none"); // 인증번호 일치 확인
 
     const [digitError, setDigitError] = useState(false); // 전화번호 미입력
     const [cerNumError, SetCerNumError] = useState(false); // 인증번호 미입력
@@ -44,8 +44,8 @@ function Register() {
         const { name, value } = e.target;
         setForm({ ...form, [name]: value });
 
-        if (name === 'confirmPassword') {
-            setPasswordMatch(value === form.password ? 'pass' : 'fail');
+        if (name === "confirmPassword") {
+            setPasswordMatch(value === form.password ? "pass" : "fail");
         }
     };
 
@@ -58,7 +58,7 @@ function Register() {
     // 인증번호 요청
     const requestCertification = (e) => {
         e.preventDefault();
-        if (form.phoneNumber === '') {
+        if (form.phoneNumber === "") {
             setDigitError(true);
         } else {
             setDigitError(false);
@@ -71,7 +71,7 @@ function Register() {
     // 인증번호 확인
     const confirmCertification = async (e) => {
         e.preventDefault();
-        if (certificationNumber === '') {
+        if (certificationNumber === "") {
             SetCerNumError(true);
         } else {
             SetCerNumError(false);
@@ -80,20 +80,12 @@ function Register() {
                 certificationNumber: certificationNumber,
             };
             try {
-                // const response = await confirmNumber(certification);
-                // 확인용 코드
-                if (certificationNumber === '1234') {
-                    SetCerNumMath('pass');
-                } else {
-                    SetCerNumMath('fail');
+                const response = await confirmNumber(certification);
+                if (response.status === 200) {
+                    SetCerNumMath("pass");
                 }
-                // if (response.httpStatusCode === 200) {
-                //     SetCerNumMath(true);
-                // } else {
-                //     SetCerNumMath(false);
-                // }
             } catch (error) {
-                console.error('Error confirming number:', error);
+                SetCerNumMath("fail");
             }
         }
     };
@@ -102,13 +94,13 @@ function Register() {
     const onSubmit = (e) => {
         e.preventDefault();
         switch (true) {
-            case passwordMatch !== 'pass':
-                alert('비밀번호를 확인해주세요');
+            case passwordMatch !== "pass":
+                alert("비밀번호를 확인해주세요");
                 break;
-            case cerNumMatch !== 'pass':
-                alert('인증번호를 확인해주세요');
+            case cerNumMatch !== "pass":
+                alert("인증번호를 확인해주세요");
                 break;
-            case passwordMatch === 'pass' && cerNumMatch === 'pass':
+            case passwordMatch === "pass" && cerNumMatch === "pass":
                 postUser(form);
                 break;
             default:
@@ -121,9 +113,12 @@ function Register() {
             <GlobalStyles /> {/* 전역 스타일 적용 */}
             <div className="center-view">
                 <div className="view-header">
-                    <a href="/" style={{ textDecoration: 'none' }}>
+                    <a href="/" style={{ textDecoration: "none" }}>
                         <img src={yu_logo} alt="영남대 로고" />
-                        <h2 style={{ color: '#193973' }}> 컴퓨터공학부 사물함 예약 시스템 </h2>
+                        <h2 style={{ color: "#193973" }}>
+                            {" "}
+                            컴퓨터공학부 사물함 예약 시스템{" "}
+                        </h2>
                     </a>
                 </div>
                 <div className="user-container">
@@ -155,6 +150,7 @@ function Register() {
                             type="password"
                             name="password"
                             onChange={onChange}
+                            helperText="4자리 이상 입력해주세요"
                         />
                         <TextField
                             fullWidth
@@ -165,11 +161,17 @@ function Register() {
                             type="password"
                             name="confirmPassword"
                             onChange={onChange}
-                            error={passwordMatch === 'fail'}
-                            helperText={passwordMatch === 'fail' ? '비밀번호가 일치하지 않습니다.' : ''}
+                            error={passwordMatch === "fail"}
+                            helperText={
+                                passwordMatch === "fail"
+                                    ? "비밀번호가 일치하지 않습니다."
+                                    : ""
+                            }
                         />
                         <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-label">전공</InputLabel>
+                            <InputLabel id="demo-simple-select-label">
+                                전공
+                            </InputLabel>
                             <Select
                                 required
                                 labelId="demo-select-small-label"
@@ -178,12 +180,20 @@ function Register() {
                                 fullWidth
                                 value={form.departmentName}
                                 name="departmentName"
-                                sx={{ textAlign: 'left' }}
-                                onChange={onChange}
-                            >
-                                <MenuItem value={'ces'}> 컴퓨터공학전공 </MenuItem>
-                                <MenuItem value={'ice'}> 정보통신공학전공 </MenuItem>
-                                <MenuItem value={'sw'}> 소프트웨어공학전공 </MenuItem>
+                                sx={{ textAlign: "left" }}
+                                onChange={onChange}>
+                                <MenuItem value={"ces"}>
+                                    {" "}
+                                    컴퓨터공학전공{" "}
+                                </MenuItem>
+                                <MenuItem value={"ice"}>
+                                    {" "}
+                                    정보통신공학전공{" "}
+                                </MenuItem>
+                                <MenuItem value={"sw"}>
+                                    {" "}
+                                    소프트웨어공학전공{" "}
+                                </MenuItem>
                             </Select>
                         </FormControl>
                         <AuthNumber>
@@ -196,22 +206,28 @@ function Register() {
                                     size="small"
                                     name="phoneNumber"
                                     error={digitError}
-                                    helperText={digitError ? '전화번호를 입력해주세요' : ''}
+                                    helperText={
+                                        digitError
+                                            ? "전화번호를 입력해주세요"
+                                            : ""
+                                    }
                                     onChange={onChange}
                                 />
                                 {timerRunning && (
-                                    <AuthNumTimer timerRunning={timerRunning} setTimerRunning={setTimerRunning} />
+                                    <AuthNumTimer
+                                        timerRunning={timerRunning}
+                                        setTimerRunning={setTimerRunning}
+                                    />
                                 )}
                             </div>
                             <ThemeProvider theme={smallButtonTheme}>
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    sx={{ fontSize: '11px', padding: '8px' }}
+                                    sx={{ fontSize: "11px", padding: "8px" }}
                                     type="button"
                                     onClick={requestCertification}
-                                    disabled={timerRunning}
-                                >
+                                    disabled={timerRunning}>
                                     인증번호
                                     <br />
                                     전송
@@ -227,17 +243,21 @@ function Register() {
                                 variant="standard"
                                 size="small"
                                 name="confirmNumber"
-                                color={cerNumMatch === 'pass' ? 'success' : 'primary'}
-                                focused={cerNumMatch === 'pass'}
-                                error={cerNumError || cerNumMatch === 'fail'}
+                                color={
+                                    cerNumMatch === "pass"
+                                        ? "success"
+                                        : "primary"
+                                }
+                                focused={cerNumMatch === "pass"}
+                                error={cerNumError || cerNumMatch === "fail"}
                                 helperText={
                                     cerNumError
-                                        ? '인증번호를 입력해주세요'
-                                        : cerNumMatch === 'fail'
-                                        ? '인증번호가 일치하지 않습니다. 재입력하세요.'
-                                        : cerNumMatch === 'pass'
-                                        ? '인증번호가 확인되었습니다.'
-                                        : ''
+                                        ? "인증번호를 입력해주세요"
+                                        : cerNumMatch === "fail"
+                                        ? "인증번호가 일치하지 않습니다. 재입력하세요."
+                                        : cerNumMatch === "pass"
+                                        ? "인증번호가 확인되었습니다."
+                                        : ""
                                 }
                                 onChange={onCfNumberChange}
                             />
@@ -245,10 +265,9 @@ function Register() {
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    sx={{ fontSize: '11px', padding: '8px' }}
+                                    sx={{ fontSize: "11px", padding: "8px" }}
                                     type="button"
-                                    onClick={confirmCertification}
-                                >
+                                    onClick={confirmCertification}>
                                     인증번호
                                     <br />
                                     확인
@@ -256,7 +275,10 @@ function Register() {
                             </ThemeProvider>
                         </AuthNumber>
                         <ThemeProvider theme={largeButtonTheme}>
-                            <Button variant="contained" color="primary" type="submit">
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                type="submit">
                                 회원 가입
                             </Button>
                         </ThemeProvider>

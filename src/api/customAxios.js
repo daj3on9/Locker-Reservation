@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios from "axios";
 
-const BASE_URL = 'http://{URL}';
+const BASE_URL = "http://54.180.106.229:8080";
 
 // 기본 axios
 const axiosAPI = (url, options) => {
@@ -19,7 +19,7 @@ const authAxiosAPI = (url, options) => {
     instance.interceptors.request.use(
         (config) => {
             // const token = getItem('jwt_token');
-            const token = '';
+            const token = "";
 
             config.headers = {
                 authorization: token ? `bearer ${token}` : null,
@@ -35,20 +35,16 @@ const authAxiosAPI = (url, options) => {
 // 회원 axios
 const userAxiosAPI = (options) => {
     const instance = axios.create({
-        baseURL: BASE_URL + '/api/user',
+        baseURL: BASE_URL + "/api/user",
         headers: {},
         ...options,
     });
 
     instance.interceptors.response.use(
         (response) => {
-            if (response.status === 200) {
-                return console.log('Message : ', response.data.responseMessage);
-            }
-            return response;
+            return response; //response 객체 반환
         },
         (error) => {
-            console.error(error);
             return Promise.reject(error);
         }
     );
@@ -59,7 +55,7 @@ const userAxiosAPI = (options) => {
 export // 사물함 axios
 const lockerAxiosAPI = (options) => {
     const instance = axios.create({
-        baseURL: BASE_URL + '/state',
+        baseURL: BASE_URL + "/state",
         headers: {},
         ...options,
     });
