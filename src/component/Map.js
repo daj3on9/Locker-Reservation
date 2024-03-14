@@ -17,18 +17,17 @@ const Map = () => {
         setFloor(event.target.value);
     };
 
-    // useSelector로 store에 저장된 값 불러오기
-    const { authenticated, accessToken } = useSelector(
-        (state) => state.authToken
-    );
+    const authenticated = useSelector((state) => state.authToken.authenticated);
+    const userName = useSelector((state) => state.userToken.studentName);
+
     // 값 확인
     console.log("로그인 여부 : ", authenticated);
-    console.log("access Token : ", accessToken);
+    console.log("학생 이름 : ", userName);
 
     return (
         <>
             {authenticated ? (
-                <div>로그인 상태입니다.</div>
+                <div>{userName}님.</div>
             ) : (
                 <div>로그인이 필요합니다.</div>
             )}

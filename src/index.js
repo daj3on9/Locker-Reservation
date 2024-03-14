@@ -5,19 +5,19 @@ import App from "./App";
 
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-import store from "./store";
+import store, { persistor } from "./store";
+import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
-import { CookiesProvider } from "react-cookie";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-    <CookiesProvider>
-        <Provider store={store}>
+    <Provider store={store}>
+        <PersistGate loding={null} persistor={persistor}>
             <BrowserRouter>
                 <App />
             </BrowserRouter>
-        </Provider>
-    </CookiesProvider>
+        </PersistGate>
+    </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function
