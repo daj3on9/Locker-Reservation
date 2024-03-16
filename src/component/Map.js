@@ -21,7 +21,7 @@ const Map = () => {
     const userName = useSelector((state) => state.userToken.studentName);
 
     return (
-        <>
+        <div>
             {authenticated ? <UserName>{userName}님.</UserName> : <></>}
             <MapContainer authenticated={authenticated}>
                 <ImageContainer>
@@ -55,7 +55,7 @@ const Map = () => {
                     />
                 </StateContainer>
             </MapContainer>
-        </>
+        </div>
     );
 };
 
@@ -72,8 +72,6 @@ const MapContainer = styled.div`
 `;
 
 const ImageContainer = styled.div`
-    width: 33.5%;
-
     @media screen and (max-width: 1280px) {
         width: 80%;
     }
@@ -85,7 +83,6 @@ const Image = styled.img`
 
 const FormContainer = styled.div`
     background-color: #ffffff;
-    width: 33.5%;
     margin-top: 50px;
 
     @media screen and (max-width: 1280px) {
@@ -94,8 +91,6 @@ const FormContainer = styled.div`
 `;
 
 const StateContainer = styled.div`
-    width: 33.5%;
-
     @media screen and (max-width: 1280px) {
         width: 80%;
     }
