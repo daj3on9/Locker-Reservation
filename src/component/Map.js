@@ -20,18 +20,10 @@ const Map = () => {
     const authenticated = useSelector((state) => state.authToken.authenticated);
     const userName = useSelector((state) => state.userToken.studentName);
 
-    // 값 확인
-    console.log("로그인 여부 : ", authenticated);
-    console.log("학생 이름 : ", userName);
-
     return (
         <>
-            {authenticated ? (
-                <div>{userName}님.</div>
-            ) : (
-                <div>로그인이 필요합니다.</div>
-            )}
-            <MapContainer>
+            {authenticated ? <UserName>{userName}님.</UserName> : <></>}
+            <MapContainer authenticated={authenticated}>
                 <ImageContainer>
                     {floor === 1 && <Image src={FirstFloor} alt="1층" />}
                     {floor === 2 && <Image src={SecondFloor} alt="2층" />}
@@ -68,7 +60,8 @@ const Map = () => {
 };
 
 const MapContainer = styled.div`
-    margin: 100px 0px 0px 100px;
+    margin: ${(props) =>
+        props.authenticated ? "30px 0px 0px 100px" : "100px 0px 0px 100px"};
     display: flex;
     flex-direction: column;
 
@@ -106,6 +99,12 @@ const StateContainer = styled.div`
     @media screen and (max-width: 1280px) {
         width: 80%;
     }
+`;
+
+const UserName = styled.div`
+    text-align: left;
+    margin-left: 100px;
+    margin-top: 50px;
 `;
 
 export default Map;
