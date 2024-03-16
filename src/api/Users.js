@@ -1,6 +1,6 @@
 import { userInstance } from "./customAxios";
-import { SET_USER } from "../store/User";
-import { SET_TOKEN } from "../store/Auth";
+import { SET_USER, DELETE_USER } from "../store/User";
+import { SET_TOKEN, DELETE_TOKEN } from "../store/Auth";
 
 // 회원가입
 export const postUser = async (userInfo) => {
@@ -47,8 +47,6 @@ export const postLogin = async (userInfo, dispatch) => {
         if (response.status === 200) {
             // 학번, 이름, accessToken store에 저장
             const { studentName, accessToken } = response.data.data;
-            console.log("이름 : ", studentName);
-            console.log("토큰 : ", accessToken);
             dispatch(SET_USER({ studentName }));
             dispatch(SET_TOKEN({ accessToken }));
         }
@@ -56,4 +54,10 @@ export const postLogin = async (userInfo, dispatch) => {
     } catch (error) {
         throw error;
     }
+};
+
+// 로그아웃
+export const doLogout = (dispatch) => {
+    dispatch(DELETE_TOKEN()); //accessToken store에서 제거
+    dispatch(DELETE_USER()); // 사용자 이름 store에서 제거
 };

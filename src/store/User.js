@@ -6,11 +6,9 @@ export const userSlice = createSlice({
         studentName: null,
     },
     reducers: {
-        //  accessToken 정보 저장
         SET_USER: (state, action) => {
             state.studentName = action.payload.studentName;
         },
-        //  accessToken 삭제
         DELETE_USER: (state) => {
             state.studentName = null;
         },
