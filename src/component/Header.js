@@ -5,12 +5,13 @@ import small_yu_logo from "../asset/small_yu_logo.png";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import { Link } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { doLogout } from "../api/Users";
+import { useAuthenticated } from "../store/UseStore";
 
 const Header = () => {
     const isMobile = useMediaQuery({ query: "(max-width:1020px)" });
-    const authenticated = useSelector((state) => state.authToken.authenticated);
+    const authenticated = useAuthenticated();
 
     const logoSrc = isMobile ? small_yu_logo : yu_logo;
     const fontSize = isMobile ? "small" : "medium";
@@ -29,7 +30,9 @@ const Header = () => {
             <Heading $isMobile={isMobile}>
                 컴퓨터공학부 사물함 예약 시스템
             </Heading>
-            <Link to="/login" style={{ textDecoration: "none" }}>
+            <Link
+                to={authenticated ? "/" : "/login"}
+                style={{ textDecoration: "none" }}>
                 <IconContainer>
                     <AccountCircleOutlinedIcon fontSize={fontSize} />
                     {authenticated ? (
