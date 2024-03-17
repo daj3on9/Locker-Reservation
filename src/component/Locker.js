@@ -4,134 +4,138 @@ import { useAccessToken } from "../store/UseStore";
 import { getLocker } from "../api/Lockers";
 import { MapContext } from "./Map";
 import { postReserve } from "../api/Lockers";
+import { useAuthenticated } from "../store/UseStore";
 
 import locker_handle from "../asset/locker_handle.png";
 
-import styled from "styled-components";
-
 function Locker() {
     const token = useAccessToken(); // accessToken 가져오기
+    const authenticated = useAuthenticated(); // 로그인 여부 가져오기
 
     const [locker, setLocker] = useState(); // locker 상태 가져오기
     const [selectedButton, setSelectedButton] = useState(null); // 선택된 버튼의 좌표 저장
 
-    const [maxRow, setMaxRow] = useState(0); // 행
-    const [maxCol, setMaxCol] = useState(0); // 열
+    const [maxRow, setMaxRow] = useState(0); // 최대 행 수
+    const [maxCol, setMaxCol] = useState(0); // 최대 열 수
     const [disabledLockers, setDisabledLockers] = useState({}); // 이미 예약된 사물함
-    const [myLocker, setMyLocker] = useState(); // 내 사물함 위치
 
-    const { floor } = useContext(MapContext);
+    const { floor, myLocker, setMyLocker } = useContext(MapContext);
 
-    // 좌석 조회
+    // 사물함 정보 조회
     useEffect(() => {
         const fetchLocker = async () => {
             const accessToken = token ? token.accessToken : null;
             const response = await getLocker(accessToken, floor);
-            setLocker(response);
-            setMaxRow(response.maxRow);
-            setMaxCol(response.maxColumn);
-            setDisabledLockers(response.lockers);
-            setMyLocker(response.myLocker);
+            console.log(response);
+            if (response) {
+                setLocker(response);
+                setMaxRow(response.maxRow);
+                setMaxCol(response.maxColumn);
+                setDisabledLockers(response.lockers);
+                setMyLocker(response.myLocker);
+            }
         };
+        setSelectedButton(null);
         fetchLocker();
-    }, [token, floor]);
-
-    useEffect(() => {
-        console.log(locker);
-    }, [locker]);
-
-    // 버튼 선택 핸들러
-    const handleSelectButton = (i, j) => {
-        if (!isDisabledButton(i, j)) {
-            setSelectedButton({ row: i, col: j });
-        }
-    };
-
-    // 선택된 버튼인지 확인하는 함수
-    const isSelectedButton = (i, j) => {
-        return (
-            selectedButton &&
-            selectedButton.row === i &&
-            selectedButton.col === j
-        );
-    };
-
-    // 주어진 좌표가 비활성화할 버튼의 좌표 배열에 있는지 확인
-    const isDisabledButton = (i, j) => {
-        return disabledLockers.some(
-            (button) => button.row === i && button.col === j
-        );
-    };
-
-    // 나의 사물함 위치
-    const isMyLocker = (i, j) => {
-        return myLocker ? myLocker.row === i && myLocker.col === j : null;
-    };
-
-    // 버튼 스타일 결정 함수
-    const getButtonStyle = (i, j) => {
-        const baseStyle = {
-            backgroundColor: "#A3B1CA",
-            border: "none",
-            padding: "10px",
-            borderRadius: "10px",
-            margin: "5px",
-            cursor: "pointer",
-        };
-
-        if (isMyLocker(i, j)) {
-            return {
-                ...baseStyle,
-                backgroundColor: "#9AC586",
-            };
-        } else if (isSelectedButton(i, j)) {
-            return {
-                ...baseStyle,
-                backgroundColor: "#e26c6c",
-            };
-        } else if (isDisabledButton(i, j)) {
-            return {
-                ...baseStyle,
-                backgroundColor: "#D9D9D9",
-                cursor: "default",
-            };
-        }
-
-        return baseStyle;
-    };
+    }, [token, floor, setMyLocker]);
 
     // 사물함 버튼 생성
-    const createButtons = (rows, cols) => {
-        const buttons = [];
+    const createLockerButtons = () => {
+        let rows = Array(maxRow)
+            .fill(null)
+            .map(() => []);
+        for (let i = 0; i < maxRow; i++) {
+            for (let j = 0; j < maxCol; j++) {
+                let button = {
+                    row: i,
+                    col: j,
+                    myLocker: false,
+                    disabled: false,
+                };
+                if (
+                    disabledLockers.some(
+                        (locker) => locker.row === i && locker.col === j
+                    )
+                ) {
+                    button.disabled = true;
+                }
+                if (
+                    myLocker &&
+                    myLocker.roomLocation === floor &&
+                    myLocker.row === i &&
+                    myLocker.col === j
+                ) {
+                    button.myLocker = true;
+                }
 
-        for (let i = 0; i < rows; i++) {
-            for (let j = 0; j < cols; j++) {
-                const buttonStyle = getButtonStyle(i, j);
-                const disabled = isDisabledButton(i, j);
-
-                buttons.push(
-                    <button
-                        key={`button-${i}-${j}`}
-                        style={buttonStyle}
-                        onClick={() => !disabled && handleSelectButton(i, j)}
-                        disabled={disabled}
-                        type="button">
-                        <img
-                            src={locker_handle}
-                            alt="locker"
-                            style={{ width: "50px" }}
-                        />
-                    </button>
-                );
+                rows[i].push(button);
             }
-            buttons.push(<br key={`break-${i}`} />);
         }
-        return buttons;
+
+        return rows;
+    };
+
+    // 선택된 버튼 처리
+    const handleButtonClick = (button) => {
+        if (authenticated && !myLocker) {
+            setSelectedButton(button); // 예약 사물함 위치 update
+
+            setTimeout(() => {
+                const isConfirmed = window.confirm("예약하시겠습니까?");
+                if (isConfirmed) {
+                    // 예약 확인
+                    const reservation = {
+                        roomLocation: floor,
+                        row: button.row,
+                        column: button.col,
+                    };
+                    postReserve(token.accessToken, reservation);
+                }
+            }, 0);
+        } else {
+            myLocker
+                ? alert("예약한 사물함이 존재합니다.")
+                : alert("로그인 후 예약하세요.");
+        }
     };
 
     return (
         <div style={{ marginBottom: "50px" }}>
-            {locker ? createButtons(maxRow, maxCol) : null}
+            {createLockerButtons().map((rowButtons, rowIndex) => (
+                <div
+                    key={rowIndex}
+                    style={{ display: "flex", marginBottom: "10px" }}>
+                    {rowButtons.map((button, buttonIndex) => (
+                        <button
+                            key={buttonIndex}
+                            disabled={button.disabled}
+                            style={{
+                                backgroundColor:
+                                    selectedButton &&
+                                    selectedButton.row === button.row &&
+                                    selectedButton.col === button.col
+                                        ? "#E26C6C"
+                                        : button.myLocker
+                                        ? "#9AC586"
+                                        : button.disabled
+                                        ? "#D9D9D9"
+                                        : "#A3B1CA",
+                                margin: "0px 5px",
+                                padding: "10px",
+                                border: "none",
+                                borderRadius: "15px",
+                                cursor: button.disabled ? "" : "pointer",
+                            }}
+                            onClick={() => handleButtonClick(button)}>
+                            <img
+                                src={locker_handle}
+                                alt="이미지"
+                                style={{ width: "50px", height: "50px" }}
+                            />
+                        </button>
+                    ))}
+                </div>
+            ))}
         </div>
     );
 }
