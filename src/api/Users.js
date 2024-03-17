@@ -50,9 +50,12 @@ export const postLogin = async (userInfo, dispatch) => {
             dispatch(SET_USER({ studentName }));
             dispatch(SET_TOKEN({ accessToken }));
         }
-        return response.data;
+        return true;
     } catch (error) {
-        throw error;
+        if (error.response && error.response.status === 401) {
+            alert("학번 또는 비밀번호가 일치하지 않습니다.");
+        }
+        return false;
     }
 };
 

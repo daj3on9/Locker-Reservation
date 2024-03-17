@@ -29,11 +29,9 @@ function Login() {
     // API 전송
     const onSubmit = async (e) => {
         e.preventDefault();
-        try {
-            await postLogin(user, dispatch);
+        const loginSuccess = await postLogin(user, dispatch);
+        if (loginSuccess) {
             navigate("/");
-        } catch (error) {
-            console.error(error);
         }
     };
 
