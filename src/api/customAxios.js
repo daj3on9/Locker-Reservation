@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://54.180.106.229:8080";
+const BASE_URL = "http://13.209.118.236:8080";
 
 // 기본 axios
 const axiosAPI = (url, options) => {
