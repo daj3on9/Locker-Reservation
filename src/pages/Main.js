@@ -21,10 +21,14 @@ export default Main;
 const MainContainer = styled.div`
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    margin-top: 8%;
     gap: 50px;
 
-    @media screen and (max-width: 1020px) {
+    @media screen and (max-width: 1100px) {
         display: flex;
         flex-direction: column;
+        align-items: center;
+        gap: 0px;
     }
 `;

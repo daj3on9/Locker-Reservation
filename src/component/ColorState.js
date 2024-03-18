@@ -2,39 +2,6 @@ import React from "react";
 import SquareIcon from "@mui/icons-material/Square";
 import styled from "styled-components";
 
-const ColorStateBox = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 30px;
-    background-color: #ffffff;
-    padding: 0px 30px;
-    border-radius: 10px;
-    margin-top: 30px;
-    justify-content: space-around;
-
-    @media screen and (max-width: 700px) {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0px;
-        flex-wrap: wrap;
-    }
-
-    @media screen and (min-width: 1020px) and (max-width: 1280px) {
-        flex-direction: row;
-        flex-wrap: wrap;
-        padding: 0px 5px;
-        gap: 0px;
-    }
-`;
-
-const ColorStateItem = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 5px;
-`;
-
 export function ColorState({ states }) {
     return (
         <ColorStateBox>
@@ -47,3 +14,31 @@ export function ColorState({ states }) {
         </ColorStateBox>
     );
 }
+
+const ColorStateBox = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 0px 10px 0px 20px;
+    border-radius: 10px;
+    margin-top: 30px;
+
+    @media screen and (max-width: 700px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0px;
+        flex-wrap: wrap;
+    }
+`;
+
+const ColorStateItem = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+    width: 50%;
+`;

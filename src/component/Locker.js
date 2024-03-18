@@ -21,6 +21,7 @@ function Locker() {
     const [disabledLockers, setDisabledLockers] = useState({}); // 이미 예약된 사물함
 
     const { floor, myLocker, setMyLocker } = useContext(MapContext);
+    const [reservationStatus, setReservationStatus] = useState(false); // 예약 상태 변수
 
     // 사물함 정보 조회
     useEffect(() => {
@@ -38,7 +39,7 @@ function Locker() {
         };
         setSelectedButton(null);
         fetchLocker();
-    }, [token, floor, setMyLocker]);
+    }, [token, floor, setMyLocker, reservationStatus]);
 
     // 사물함 버튼 생성
     const createLockerButtons = () => {
@@ -46,7 +47,7 @@ function Locker() {
             .fill(null)
             .map(() => []);
         for (let i = 0; i < maxRow; i++) {
-            for (let j = 0; j < 20; j++) {
+            for (let j = 0; j < maxCol; j++) {
                 let button = {
                     row: i,
                     col: j,
@@ -81,7 +82,7 @@ function Locker() {
         if (authenticated && !myLocker) {
             setSelectedButton(button); // 예약 사물함 위치 update
 
-            setTimeout(() => {
+            setTimeout(async () => {
                 const isConfirmed = window.confirm("예약하시겠습니까?");
                 if (isConfirmed) {
                     // 예약 확인
@@ -90,12 +91,15 @@ function Locker() {
                         row: button.row,
                         column: button.col,
                     };
-                    postReserve(token.accessToken, reservation);
+                    await postReserve(token.accessToken, reservation);
+                    setReservationStatus(!reservationStatus);
                 }
             }, 0);
         } else {
             myLocker
-                ? alert("예약한 사물함이 존재합니다.")
+                ? alert(
+                      `이미 예약한 사물함이 존재합니다. \n취소 후 다시 예약해주세요.`
+                  )
                 : alert("로그인 후 예약하세요.");
         }
     };
@@ -103,7 +107,7 @@ function Locker() {
     return (
         <LockerContainer>
             {createLockerButtons().map((rowButtons, rowIndex) => (
-                <div key={rowIndex} style={{ display: "flex" }}>
+                <LockerRow key={rowIndex}>
                     {rowButtons.map((button, buttonIndex) => (
                         <LockerButton
                             key={buttonIndex}
@@ -118,7 +122,7 @@ function Locker() {
                             <LockerImg src={locker_handle} alt="이미지" />
                         </LockerButton>
                     ))}
-                </div>
+                </LockerRow>
             ))}
         </LockerContainer>
     );
@@ -128,13 +132,51 @@ export default Locker;
 
 // 기존 LockerContainer 유지
 const LockerContainer = styled.div`
-    margin: 100px 50px 50px 0px;
-    @media screen and (max-width: 1020px) {
-        margin: 0px 0px 50px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+    flex: 1 1 70%;
+    margin-right: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 5px;
+    overflow-x: overlay;
+    overflow-y: overlay;
+
+    &::-webkit-scrollbar {
+        width: 14px;
+        height: 14px;
     }
+
+    // 스크롤바 디자인
+    &::-webkit-scrollbar-thumb {
+        outline: none;
+        border-radius: 10px;
+        border: 4px solid transparent;
+        box-shadow: inset 6px 6px 0 rgba(34, 34, 34, 0.15);
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        border: 4px solid transparent;
+        box-shadow: inset 6px 6px 0 rgba(34, 34, 34, 0.3);
+    }
+
+    &::-webkit-scrollbar-track {
+        box-shadow: none;
+        background-color: transparent;
+    }
+
+    @media screen and (max-width: 1100px) {
+        align-items: flex-start;
+        margin-right: 0px;
+        margin-bottom: 50px;
+        max-width: 60%;
+    }
+`;
+
+// Locker 한 줄
+const LockerRow = styled.div`
+    display: flex;
+    gap: 5px;
 `;
 
 // 버튼 스타일을 위한 styled component 추가
@@ -151,9 +193,17 @@ const LockerButton = styled.button`
     padding: 10px;
     border: none;
     border-radius: 15px;
-    cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+    display: flex;
+    justify-content: center;
+    width: 70px;
+    cursor: ${(props) => (props.disabled ? "" : "pointer")};
+
+    @media screen and (max-width: 515px) {
+        padding: 10px;
+        width: 50px;
+    }
 `;
 
 const LockerImg = styled.img`
-    width: 10px;
+    width: 100%;
 `;

@@ -24,14 +24,12 @@ const Header = () => {
     };
 
     return (
-        <HeaderContainer $isMobile={isMobile}>
+        <HeaderContainer>
             <LogoImg src={logoSrc} alt="로고" />
-            <Heading $isMobile={isMobile}>
-                컴퓨터공학부 사물함 예약 시스템
-            </Heading>
+            <Heading>컴퓨터공학부 사물함 예약 시스템</Heading>
             <UserContainer>
                 {authenticated ? (
-                    <UserName $isMobile={isMobile}>
+                    <UserName>
                         <b>{userName}</b>님.
                     </UserName>
                 ) : (
@@ -41,11 +39,9 @@ const Header = () => {
                     to={authenticated ? "/" : "/login"}
                     style={{ textDecoration: "none" }}>
                     {authenticated ? (
-                        <LoginText $isMobile={isMobile} onClick={handleLogout}>
-                            로그아웃
-                        </LoginText>
+                        <LoginText onClick={handleLogout}>로그아웃</LoginText>
                     ) : (
-                        <LoginText $isMobile={isMobile}>로그인</LoginText>
+                        <LoginText>로그인</LoginText>
                     )}
                 </Link>
             </UserContainer>
@@ -60,7 +56,11 @@ const HeaderContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: ${(props) => (props.$isMobile ? "0px 20px" : "0px 50px")};
+    padding: 0px 50px;
+
+    @media screen and (max-width: 768px) {
+        padding: 0px 20px;
+    }
 `;
 
 const LogoImg = styled.img`
@@ -68,10 +68,14 @@ const LogoImg = styled.img`
 `;
 
 const Heading = styled.p`
-    font-size: ${(props) => (props.$isMobile ? "15px" : "20px")};
+    font-size: 20px;
     font-weight: bold;
 
     color: rgb(25, 57, 115);
+
+    @media screen and (max-width: 768px) {
+        font-size: 15px;
+    }
 `;
 
 const UserContainer = styled.div`
@@ -79,12 +83,21 @@ const UserContainer = styled.div`
     color: #193973;
     align-items: center;
     gap: 40px;
-    font-size: ${(props) => (props.$isMobile ? "10px" : "15px")};
+    font-size: 15px;
+
+    @media screen and (max-width: 768px) {
+        font-size: 10px;
+        gap: 5px;
+    }
 `;
 
 const LoginText = styled.p`
     margin: 0px;
-    font-size: ${(props) => (props.$isMobile ? "10px" : "15px")};
+    font-size: 15px;
+
+    @media screen and (max-width: 768px) {
+        font-size: 10px;
+    }
 `;
 
 const UserName = styled.div`
