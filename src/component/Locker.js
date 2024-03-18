@@ -7,6 +7,7 @@ import { postReserve } from "../api/Lockers";
 import { useAuthenticated } from "../store/UseStore";
 
 import locker_handle from "../asset/locker_handle.png";
+import styled from "styled-components";
 
 function Locker() {
     const token = useAccessToken(); // accessToken 가져오기
@@ -45,7 +46,7 @@ function Locker() {
             .fill(null)
             .map(() => []);
         for (let i = 0; i < maxRow; i++) {
-            for (let j = 0; j < maxCol; j++) {
+            for (let j = 0; j < 20; j++) {
                 let button = {
                     row: i,
                     col: j,
@@ -100,44 +101,59 @@ function Locker() {
     };
 
     return (
-        <div style={{ marginBottom: "50px" }}>
+        <LockerContainer>
             {createLockerButtons().map((rowButtons, rowIndex) => (
-                <div
-                    key={rowIndex}
-                    style={{ display: "flex", marginBottom: "10px" }}>
+                <div key={rowIndex} style={{ display: "flex" }}>
                     {rowButtons.map((button, buttonIndex) => (
-                        <button
+                        <LockerButton
                             key={buttonIndex}
                             disabled={button.disabled}
-                            style={{
-                                backgroundColor:
-                                    selectedButton &&
-                                    selectedButton.row === button.row &&
-                                    selectedButton.col === button.col
-                                        ? "#E26C6C"
-                                        : button.myLocker
-                                        ? "#9AC586"
-                                        : button.disabled
-                                        ? "#D9D9D9"
-                                        : "#A3B1CA",
-                                margin: "0px 5px",
-                                padding: "10px",
-                                border: "none",
-                                borderRadius: "15px",
-                                cursor: button.disabled ? "" : "pointer",
-                            }}
+                            $isSelected={
+                                selectedButton &&
+                                selectedButton.row === button.row &&
+                                selectedButton.col === button.col
+                            }
+                            $isMyLocker={button.myLocker}
                             onClick={() => handleButtonClick(button)}>
-                            <img
-                                src={locker_handle}
-                                alt="이미지"
-                                style={{ width: "50px", height: "50px" }}
-                            />
-                        </button>
+                            <LockerImg src={locker_handle} alt="이미지" />
+                        </LockerButton>
                     ))}
                 </div>
             ))}
-        </div>
+        </LockerContainer>
     );
 }
 
 export default Locker;
+
+// 기존 LockerContainer 유지
+const LockerContainer = styled.div`
+    margin: 100px 50px 50px 0px;
+    @media screen and (max-width: 1020px) {
+        margin: 0px 0px 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+`;
+
+// 버튼 스타일을 위한 styled component 추가
+const LockerButton = styled.button`
+    background-color: ${(props) =>
+        props.$isSelected
+            ? "#E26C6C"
+            : props.$isMyLocker
+            ? "#9AC586"
+            : props.disabled
+            ? "#D9D9D9"
+            : "#A3B1CA"};
+    margin: 0px 2px;
+    padding: 10px;
+    border: none;
+    border-radius: 15px;
+    cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+`;
+
+const LockerImg = styled.img`
+    width: 10px;
+`;

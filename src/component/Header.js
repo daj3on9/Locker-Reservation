@@ -2,19 +2,18 @@ import React from "react";
 import styled from "styled-components";
 import yu_logo from "../asset/yu_logo.svg";
 import small_yu_logo from "../asset/small_yu_logo.png";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import { Link } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import { useDispatch } from "react-redux";
 import { doLogout } from "../api/Users";
-import { useAuthenticated } from "../store/UseStore";
+import { useAuthenticated, useUserName } from "../store/UseStore";
 
 const Header = () => {
     const isMobile = useMediaQuery({ query: "(max-width:1020px)" });
     const authenticated = useAuthenticated();
+    const userName = useUserName();
 
     const logoSrc = isMobile ? small_yu_logo : yu_logo;
-    const fontSize = isMobile ? "small" : "medium";
 
     // 로그아웃 버튼
     const dispatch = useDispatch();
@@ -30,11 +29,17 @@ const Header = () => {
             <Heading $isMobile={isMobile}>
                 컴퓨터공학부 사물함 예약 시스템
             </Heading>
-            <Link
-                to={authenticated ? "/" : "/login"}
-                style={{ textDecoration: "none" }}>
-                <IconContainer>
-                    <AccountCircleOutlinedIcon fontSize={fontSize} />
+            <UserContainer>
+                {authenticated ? (
+                    <UserName $isMobile={isMobile}>
+                        <b>{userName}</b>님.
+                    </UserName>
+                ) : (
+                    <UserName> 로그인 후 예약해주세요! </UserName>
+                )}
+                <Link
+                    to={authenticated ? "/" : "/login"}
+                    style={{ textDecoration: "none" }}>
                     {authenticated ? (
                         <LoginText $isMobile={isMobile} onClick={handleLogout}>
                             로그아웃
@@ -42,8 +47,8 @@ const Header = () => {
                     ) : (
                         <LoginText $isMobile={isMobile}>로그인</LoginText>
                     )}
-                </IconContainer>
-            </Link>
+                </Link>
+            </UserContainer>
         </HeaderContainer>
     );
 };
@@ -69,11 +74,19 @@ const Heading = styled.p`
     color: rgb(25, 57, 115);
 `;
 
-const IconContainer = styled.div`
+const UserContainer = styled.div`
+    display: flex;
     color: #193973;
+    align-items: center;
+    gap: 40px;
+    font-size: ${(props) => (props.$isMobile ? "10px" : "15px")};
 `;
 
 const LoginText = styled.p`
     margin: 0px;
     font-size: ${(props) => (props.$isMobile ? "10px" : "15px")};
+`;
+
+const UserName = styled.div`
+    text-align: left;
 `;

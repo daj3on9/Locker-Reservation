@@ -1,6 +1,6 @@
 import React, { useState, createContext } from "react";
 import Locker from "./Locker";
-import { useAuthenticated, useUserName } from "../store/UseStore";
+import { useAuthenticated } from "../store/UseStore";
 import { postReserve } from "../api/Lockers";
 import { useAccessToken } from "../store/UseStore";
 
@@ -28,7 +28,6 @@ const Map = () => {
     };
 
     const authenticated = useAuthenticated();
-    const userName = useUserName();
     const token = useAccessToken(); // accessToken 가져오기
 
     // 예약 취소
@@ -48,13 +47,7 @@ const Map = () => {
 
     return (
         <MapContext.Provider value={{ floor, myLocker, setMyLocker }}>
-            <div>
-                {authenticated ? (
-                    <UserName>{userName}님.</UserName>
-                ) : (
-                    <UserName> 로그인 후 예약해주세요! </UserName>
-                )}
-
+            <div style={{ flexGrow: "0.3" }}>
                 <MapContainer>
                     <ImageContainer>
                         {floor === 111 && <Image src={FirstFloor} alt="1층" />}
@@ -96,7 +89,9 @@ const Map = () => {
                     )}
                 </MapContainer>
             </div>
-            <Locker />
+            <div style={{ flexGrow: "1" }}>
+                <Locker />
+            </div>
         </MapContext.Provider>
     );
 };
@@ -137,12 +132,6 @@ const StateContainer = styled.div`
     }
 `;
 
-const UserName = styled.div`
-    text-align: left;
-    margin-left: 100px;
-    margin-top: 50px;
-`;
-
 const CancleButton = styled.button`
     margin-top: 30px;
     width: 100%;
@@ -155,10 +144,6 @@ const CancleButton = styled.button`
 
     @media screen and (max-width: 1280px) {
         width: 80%;
-    }
-
-    &:hover {
-        background-color: gray;
     }
 `;
 
