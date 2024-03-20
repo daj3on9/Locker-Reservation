@@ -20,15 +20,19 @@ function Locker() {
     const [maxCol, setMaxCol] = useState(0); // 최대 열 수
     const [disabledLockers, setDisabledLockers] = useState({}); // 이미 예약된 사물함
 
-    const { floor, myLocker, setMyLocker } = useContext(MapContext);
-    const [reservationStatus, setReservationStatus] = useState(false); // 예약 상태 변수
+    const {
+        floor,
+        myLocker,
+        setMyLocker,
+        reservationStatus,
+        setReservationStatus,
+    } = useContext(MapContext);
 
     // 사물함 정보 조회
     useEffect(() => {
         const fetchLocker = async () => {
             const accessToken = token ? token.accessToken : null;
             const response = await getLocker(accessToken, floor);
-            console.log(response);
             if (response) {
                 setLocker(response);
                 setMaxRow(response.maxRow);
@@ -92,7 +96,7 @@ function Locker() {
                         column: button.col,
                     };
                     await postReserve(token.accessToken, reservation);
-                    setReservationStatus(!reservationStatus);
+                    setReservationStatus("reserved");
                 }
             }, 0);
         } else {
