@@ -94,7 +94,7 @@ const UserContainer = styled.div`
 const LoginText = styled.p`
     margin: 0px;
     font-size: 15px;
-
+    color: #193973;
     @media screen and (max-width: 768px) {
         font-size: 10px;
     }

@@ -138,6 +138,7 @@ export default Locker;
 const LockerContainer = styled.div`
     flex: 1 1 70%;
     margin-right: 40px;
+    margin-bottom: 50px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -172,7 +173,6 @@ const LockerContainer = styled.div`
     @media screen and (max-width: 1100px) {
         align-items: flex-start;
         margin-right: 0px;
-        margin-bottom: 50px;
         max-width: 60%;
     }
 `;
