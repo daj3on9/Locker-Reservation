@@ -9,9 +9,19 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import FirstFloor from "../asset/map_1F.png";
-import SecondFloor from "../asset/map_2F.png";
 import { ColorState } from "./ColorState";
+
+// 지도 사진
+import F115 from "../asset/115.png";
+import F116 from "../asset/116.png";
+import F117 from "../asset/117.png";
+import F123 from "../asset/123.png";
+import F124 from "../asset/124.png";
+import F220 from "../asset/220.png";
+import F221 from "../asset/221.png";
+import F322B from "../asset/322B.png";
+import F322F from "../asset/322F.png";
+import F323 from "../asset/323.png";
 
 export const MapContext = createContext({
     floor: 115, // 임의 값
@@ -55,20 +65,16 @@ const Map = () => {
             }}>
             <MapContainer>
                 <ImageContainer>
-                    {floor === 323 && <Image src={FirstFloor} alt="323앞" />}
-                    {floor === 3220 && (
-                        <Image src={SecondFloor} alt="322앞문" />
-                    )}
-                    {floor === 3221 && (
-                        <Image src={SecondFloor} alt="322뒷문" />
-                    )}
-                    {floor === 221 && <Image src={SecondFloor} alt="221앞" />}
-                    {floor === 220 && <Image src={SecondFloor} alt="220앞" />}
-                    {floor === 124 && <Image src={SecondFloor} alt="124앞" />}
-                    {floor === 123 && <Image src={SecondFloor} alt="123앞" />}
-                    {floor === 117 && <Image src={SecondFloor} alt="117앞" />}
-                    {floor === 116 && <Image src={SecondFloor} alt="116앞" />}
-                    {floor === 115 && <Image src={SecondFloor} alt="115앞" />}
+                    {floor === 323 && <Image src={F323} alt="323앞" />}
+                    {floor === 3220 && <Image src={F322B} alt="322앞문" />}
+                    {floor === 3221 && <Image src={F322F} alt="322뒷문" />}
+                    {floor === 221 && <Image src={F221} alt="221앞" />}
+                    {floor === 220 && <Image src={F220} alt="220앞" />}
+                    {floor === 124 && <Image src={F124} alt="124앞" />}
+                    {floor === 123 && <Image src={F123} alt="123앞" />}
+                    {floor === 117 && <Image src={F117} alt="117앞" />}
+                    {floor === 116 && <Image src={F116} alt="116앞" />}
+                    {floor === 115 && <Image src={F115} alt="115앞" />}
                 </ImageContainer>
                 <FormContainer>
                     <FormControl fullWidth>
