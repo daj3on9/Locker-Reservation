@@ -14,7 +14,7 @@ import SecondFloor from "../asset/map_2F.png";
 import { ColorState } from "./ColorState";
 
 export const MapContext = createContext({
-    floor: 111, // 임의 값
+    floor: 115, // 임의 값
     myLocker: undefined, // 초기값
     setMyLocker: () => {}, // myLocker 업데이트
     reservationStatus: undefined, // 예약 상태
@@ -22,7 +22,7 @@ export const MapContext = createContext({
 });
 
 const Map = () => {
-    const [floor, setFloor] = useState(111); // 사물함 위치 변경
+    const [floor, setFloor] = useState(115); // 사물함 위치 변경
     const [myLocker, setMyLocker] = useState(); // myLocker 위치
     const [reservationStatus, setReservationStatus] = useState(); // 예약 상태
 
@@ -55,8 +55,6 @@ const Map = () => {
             }}>
             <MapContainer>
                 <ImageContainer>
-                    {floor === 111 && <Image src={FirstFloor} alt="111" />}
-
                     {floor === 323 && <Image src={FirstFloor} alt="323앞" />}
                     {floor === 3220 && (
                         <Image src={SecondFloor} alt="322앞문" />
@@ -84,7 +82,6 @@ const Map = () => {
                             label="floor"
                             onChange={handleChange}
                             fullWidth>
-                            <MenuItem value={111}> 111 </MenuItem>
                             <MenuItem value={115}> 115 앞 </MenuItem>
                             <MenuItem value={116}> 116 앞 </MenuItem>
                             <MenuItem value={117}> 117 앞 </MenuItem>
