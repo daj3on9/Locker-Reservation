@@ -12,6 +12,12 @@ export function useAuthenticated() {
     return authenticated;
 }
 
+// expiredTime 반환
+export function useExpiredTime() {
+    const expiredTime = useSelector((state) => state.authToken.expiredTime);
+    return expiredTime;
+}
+
 // userName 반환
 export function useUserName() {
     const userName = useSelector((state) => state.userToken.studentName);
