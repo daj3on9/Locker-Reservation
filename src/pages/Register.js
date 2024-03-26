@@ -62,7 +62,10 @@ function Register() {
             setDigitError(true);
         } else {
             setDigitError(false);
-            const phoneNumber = { phoneNumber: form.phoneNumber };
+            const phoneNumber = {
+                phoneNumber: form.phoneNumber.replace(/[^0-9]/g, ""),
+            };
+            console.log(phoneNumber);
             postNumber(phoneNumber);
             setTimerRunning(true); // 타이머 실행!
         }
@@ -93,7 +96,19 @@ function Register() {
     // API 전송
     const onSubmit = (e) => {
         e.preventDefault();
+        //정규식
+        let reg_studentId = /^[0-9]{8}/;
+        let reg_name = /^[가-힣]{2,20}$/;
         switch (true) {
+            case !reg_studentId.test(form.studentId):
+                alert("정확한 학번을 입력해주세요");
+                break;
+            case !reg_name.test(form.studentName):
+                alert("이름을 정확하게 입력해주세요");
+                break;
+            case form.password.length < 4:
+                alert("비밀번호는 4자리 이상 입력해주세요");
+                break;
             case passwordMatch !== "pass":
                 alert("비밀번호를 확인해주세요");
                 break;
@@ -130,6 +145,7 @@ function Register() {
                             variant="standard"
                             size="small"
                             name="studentId"
+                            placeholder="22110000"
                             onChange={onChange}
                         />
                         <TextField
@@ -139,6 +155,7 @@ function Register() {
                             variant="standard"
                             size="small"
                             name="studentName"
+                            placeholder="홍길동"
                             onChange={onChange}
                         />
                         <TextField
@@ -205,6 +222,7 @@ function Register() {
                                     variant="standard"
                                     size="small"
                                     name="phoneNumber"
+                                    placeholder="01012345678"
                                     error={digitError}
                                     helperText={
                                         digitError
