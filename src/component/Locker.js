@@ -154,7 +154,6 @@ const LockerContainer = styled.div`
 
     // 스크롤바 디자인
     &::-webkit-scrollbar-thumb {
-        outline: none;
         border-radius: 10px;
         border: 4px solid transparent;
         box-shadow: inset 6px 6px 0 rgba(34, 34, 34, 0.15);

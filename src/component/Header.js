@@ -33,7 +33,7 @@ const Header = () => {
                         <b>{userName}</b>님.
                     </UserName>
                 ) : (
-                    <UserName> 로그인 후 예약해주세요! </UserName>
+                    <></>
                 )}
                 <Link
                     to={authenticated ? "/" : "/login"}
