@@ -144,6 +144,7 @@ const LockerContainer = styled.div`
     align-items: flex-start;
     justify-content: center;
     gap: 5px;
+    overeflow: scroll;
     overflow-x: overlay;
     overflow-y: overlay;
 
