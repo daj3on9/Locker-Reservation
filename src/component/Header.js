@@ -26,7 +26,7 @@ const Header = () => {
     return (
         <HeaderContainer>
             <LogoImg src={logoSrc} alt="로고" />
-            <Heading>컴퓨터공학부 사물함 예약 시스템</Heading>
+            <Heading href="/">컴퓨터공학부 사물함 예약 시스템</Heading>
             <UserContainer>
                 {authenticated ? (
                     <UserName>
@@ -67,12 +67,12 @@ const LogoImg = styled.img`
     height: 20px;
 `;
 
-const Heading = styled.p`
+const Heading = styled.a`
     font-size: 20px;
     font-weight: bold;
-
+    margin: 15px;
     color: rgb(25, 57, 115);
-
+    text-decoration: none;
     @media screen and (max-width: 768px) {
         font-size: 15px;
     }
