@@ -51,7 +51,9 @@ function Locker() {
         if (lockerContainer) {
             lockerContainer.scrollTo(0, 0); // 스크롤 위치 원점으로!
         }
-        setHelper(false);
+        floor === 3221
+            ? setHelper(true)
+            : setTimeout(() => setHelper(false), 100);
     }, [token, floor, setMyLocker, reservationStatus]);
 
     // 모바일에서 화면 좌우로 움직이세요 화면
@@ -63,10 +65,15 @@ function Locker() {
             lockerContainer.removeEventListener("scroll", handleScroll);
         };
 
-        lockerContainer.addEventListener("scroll", handleScroll);
+        if (lockerContainer) {
+            lockerContainer.addEventListener("scroll", handleScroll);
+        }
 
-        return () =>
-            lockerContainer.removeEventListener("scroll", handleScroll);
+        return () => {
+            if (lockerContainer) {
+                lockerContainer.removeEventListener("scroll", handleScroll);
+            }
+        };
     }, [helper, floor]);
 
     // 사물함 버튼 생성
