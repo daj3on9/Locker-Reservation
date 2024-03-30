@@ -9,6 +9,8 @@ import { useAuthenticated } from "../store/UseStore";
 import locker_handle from "../asset/locker_handle.png";
 import styled from "styled-components";
 
+import CodeRoundedIcon from "@mui/icons-material/CodeRounded";
+
 function Locker() {
     const token = useAccessToken(); // accessToken 가져오기
     const authenticated = useAuthenticated(); // 로그인 여부 가져오기
@@ -20,6 +22,8 @@ function Locker() {
     const [maxCol, setMaxCol] = useState(0); // 최대 열 수
     const [disabledLockers, setDisabledLockers] = useState({}); // 이미 예약된 사물함
 
+    const [helper, setHelper] = useState(false); // 화면 좌우로 움직이세요
+
     const {
         floor,
         myLocker,
@@ -30,6 +34,7 @@ function Locker() {
 
     // 사물함 정보 조회
     useEffect(() => {
+        const lockerContainer = document.getElementById("lockerContainer");
         const fetchLocker = async () => {
             const accessToken = token ? token.accessToken : null;
             const response = await getLocker(accessToken, floor);
@@ -43,7 +48,26 @@ function Locker() {
         };
         setSelectedButton(null);
         fetchLocker();
+        if (lockerContainer) {
+            lockerContainer.scrollTo(0, 0); // 스크롤 위치 원점으로!
+        }
+        setHelper(false);
     }, [token, floor, setMyLocker, reservationStatus]);
+
+    // 모바일에서 화면 좌우로 움직이세요 화면
+    // 화면 좌우 스크롤 감지
+    useEffect(() => {
+        const lockerContainer = document.getElementById("lockerContainer");
+        const handleScroll = () => {
+            setHelper(true);
+            lockerContainer.removeEventListener("scroll", handleScroll);
+        };
+
+        lockerContainer.addEventListener("scroll", handleScroll);
+
+        return () =>
+            lockerContainer.removeEventListener("scroll", handleScroll);
+    }, [helper, floor]);
 
     // 사물함 버튼 생성
     const createLockerButtons = () => {
@@ -109,7 +133,14 @@ function Locker() {
     };
 
     return (
-        <LockerContainer>
+        <LockerContainer id="lockerContainer">
+            <HelperLocker $helper={helper}>
+                <Helpertxt>
+                    {" "}
+                    <CodeRoundedIcon /> <br />
+                    좌우로 움직이세요{" "}
+                </Helpertxt>
+            </HelperLocker>
             {createLockerButtons().map((rowButtons, rowIndex) => (
                 <LockerRow key={rowIndex}>
                     {rowButtons.map((button, buttonIndex) => (
@@ -147,6 +178,7 @@ const LockerContainer = styled.div`
     overeflow: scroll;
     overflow-x: overlay;
     overflow-y: overlay;
+    position: relative;
 
     &::-webkit-scrollbar {
         width: 14px;
@@ -210,4 +242,22 @@ const LockerButton = styled.button`
 
 const LockerImg = styled.img`
     width: 100%;
+`;
+
+const HelperLocker = styled.div`
+    display: none;
+    @media screen and (max-width: 1100px) {
+        display: ${(props) => (props.$helper ? "none" : "block")};
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.3);
+        flex: 1 0 100%;
+    }
+`;
+
+const Helpertxt = styled.p`
+    padding-top: 40%;
+    margin: 0;
+    color: #ffffff;
 `;
