@@ -79,7 +79,7 @@ const Map = () => {
                 <FormContainer>
                     <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
-                            Floor
+                            위치
                         </InputLabel>
                         <Select
                             labelId="demo-select-small-label"
@@ -88,16 +88,28 @@ const Map = () => {
                             label="floor"
                             onChange={handleChange}
                             fullWidth>
-                            <MenuItem value={115}> 115 앞 </MenuItem>
-                            <MenuItem value={116}> 116 앞 </MenuItem>
-                            <MenuItem value={117}> 117 앞 </MenuItem>
-                            <MenuItem value={123}> 123 앞 </MenuItem>
-                            <MenuItem value={124}> 124 앞 </MenuItem>
-                            <MenuItem value={220}> 220 앞 </MenuItem>
-                            <MenuItem value={221}> 221 앞 </MenuItem>
-                            <MenuItem value={3220}> 322 뒷문 </MenuItem>
-                            <MenuItem value={3221}> 322 앞문 </MenuItem>
-                            <MenuItem value={323}> 323 앞 </MenuItem>
+                            <MenuItem value={115}>
+                                {" "}
+                                115 앞(컴공, SW융합){" "}
+                            </MenuItem>
+                            <MenuItem value={116}>
+                                {" "}
+                                116 앞(컴공, SW융합){" "}
+                            </MenuItem>
+                            <MenuItem value={117}> 117 앞 (정통) </MenuItem>
+                            <MenuItem value={123}> 123 앞 (정통)</MenuItem>
+                            <MenuItem value={124}> 124 앞 (정통)</MenuItem>
+                            <MenuItem value={220}>
+                                {" "}
+                                220 앞 (컴공, SW융합)
+                            </MenuItem>
+                            <MenuItem value={221}>
+                                {" "}
+                                221 앞 (컴공, SW융합)
+                            </MenuItem>
+                            <MenuItem value={3220}> 322 뒷문 (정통)</MenuItem>
+                            <MenuItem value={3221}> 322 앞문 (정통)</MenuItem>
+                            <MenuItem value={323}> 323 앞 (정통)</MenuItem>
                         </Select>
                     </FormControl>
                 </FormContainer>

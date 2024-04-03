@@ -12,6 +12,10 @@ function Main() {
             <MainContainer>
                 <Map />
             </MainContainer>
+            <Notice>
+                ※ 본인 전공 전용 사물함에 예약했을 시, 임의로 다른 곳에 배정될
+                수 있습니다.
+            </Notice>
         </div>
     );
 }
@@ -30,5 +34,16 @@ const MainContainer = styled.div`
         flex-direction: column;
         align-items: center;
         gap: 0px;
+    }
+`;
+
+const Notice = styled.p`
+    text-align: left;
+    padding-left: 50px;
+
+    @media screen and (max-width: 1100px) {
+        text-align: center;
+        padding: 0px;
+        margin: -30px 0px 30px;
     }
 `;
